@@ -16,7 +16,12 @@ const UserSchema = new schema({
     dob : {
         type : Date,
         required : true
+    },
+    isSent : {
+        type : Boolean,
+        default : false
     }
+
 }, {timestamps:true})
 
 const UserModel = mongoose.model("users", UserSchema);
