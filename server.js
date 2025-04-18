@@ -25,8 +25,8 @@ server.get("/", (req, res)=>{
 
 server.post("/", validateUser , async(req, res)=>{
     const payload = req.body
-    const date = payload.dob
-    console.log(date)
+   
+
     const {username, email, dob} = payload;
 
     if(!username || !email || !dob){
@@ -46,19 +46,25 @@ server.get("/thanks", (req,res)=>{
     res.render('thanks')
 })
 
+// "0 7-19/2 * * *"
+// "0 7 * * *"
 
 const job = schedule.scheduleJob("0 7-19/2 * * *", async function(){
     const presentDate = new Date()
     const startOfDay = new Date(presentDate.getFullYear(), presentDate.getMonth(), presentDate.getDate())
     const endOfDay = new Date(presentDate.getFullYear(), presentDate.getMonth(), presentDate.getDate() + 1)
-   
+    console.log(startOfDay)
+
     try{
+
         let user = await UserModel.findOne({
             $and : [
-                {dob:{$gte:startOfDay,$lt:endOfDay}},
+                {birthday:{$gte:startOfDay,$lt:endOfDay}},
                 {isSent:false}
             ]
         })
+
+        console.log(user)
 
         if (!user) {
             console.log("no birthdays today");
@@ -116,6 +122,18 @@ const job = schedule.scheduleJob("0 7-19/2 * * *", async function(){
         console.log(error.message)
     }
 })
+
+// resets the isSent attribute to false every beginning of the new year
+const resetJob = schedule.scheduleJob('0 0 1 1 *', async function(){
+    try{
+        const result = await UserModel.updateMany({}, { $set: { isSent: false } });
+        console.log(`successfully updated isSent attribute: ${result.modifiedCount} `)
+        
+    }catch(error){
+        console.log("unable to update isSent")
+    }
+})
+
 server.use((err, req, res, next) => {
     res.status(err.status || 500).json({
         error: err.message || "Something went wrong",
