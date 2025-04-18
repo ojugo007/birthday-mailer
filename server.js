@@ -49,7 +49,7 @@ server.get("/thanks", (req,res)=>{
 // "0 7-19/2 * * *"
 // "0 7 * * *"
 
-const job = schedule.scheduleJob("0 7-19/2 * * *", async function(){
+const job = schedule.scheduleJob("0 7,9,11,13,15,17,19 * * *", async function(){
     const presentDate = new Date()
     const startOfDay = new Date(presentDate.getFullYear(), presentDate.getMonth(), presentDate.getDate())
     const endOfDay = new Date(presentDate.getFullYear(), presentDate.getMonth(), presentDate.getDate() + 1)
