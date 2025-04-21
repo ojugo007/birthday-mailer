@@ -9,7 +9,7 @@ const database = require("./db");
 database.connectDB();
 
 // === Birthday Email Job ===
-schedule.scheduleJob("* * * * *", async function () {
+schedule.scheduleJob("0 7 * * *", async function () {
     const presentDate = new Date();
 
     const startOfDay = new Date(presentDate.getFullYear(), presentDate.getMonth(), presentDate.getDate());
